@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- 1. UoM Categories -->
+    <record id="type_uom_category" model="niits.migrate.type">
+        <field name="name">01. UoM Categories</field>
+        <field name="code">uom_category</field>
+        <field name="sequence">1</field>
+        <field name="category">master</field>
+        <field name="model">uom.category</field>
+        <field name="unique_key">name</field>
+        <field name="bridge_module">product</field>
+        <field name="is_fast_eligible">False</field>
+        <field name="description">Unit of Measure Categories (e.g. Unit, Weight, Working Time, Volume, Length)</field>
+    </record>
+
+    <!-- 2. Units of Measure -->
+    <record id="type_uom_uom" model="niits.migrate.type">
+        <field name="name">02. Units of Measure (UoM)</field>
+        <field name="code">uom_uom</field>
+        <field name="sequence">2</field>
+        <field name="category">master</field>
+        <field name="model">uom.uom</field>
+        <field name="unique_key">name</field>
+        <field name="depends_on">uom_category</field>
+        <field name="bridge_module">product</field>
+        <field name="is_fast_eligible">False</field>
+        <field name="description">Units of measure linked to categories (Units, kg, g, Hours, Liters, etc.)</field>
+    </record>
+
+    <!-- 3. Product Categories -->
+    <record id="type_product_category" model="niits.migrate.type">
+        <field name="name">03. Product Categories</field>
+        <field name="code">product_category</field>
+        <field name="sequence">3</field>
+        <field name="category">master</field>
+        <field name="model">product.category</field>
+        <field name="unique_key">complete_name</field>
+        <field name="bridge_module">product</field>
+        <field name="is_fast_eligible">True</field>
+        <field name="description">Product categories supporting hierarchical parent/child structures</field>
+    </record>
+
+    <!-- 4. POS Categories -->
+    <record id="type_pos_category" model="niits.migrate.type">
+        <field name="name">04. POS Categories</field>
+        <field name="code">pos_category</field>
+        <field name="sequence">4</field>
+        <field name="category">master</field>
+        <field name="model">pos.category</field>
+        <field name="unique_key">name</field>
+        <field name="bridge_module">pos</field>
+        <field name="is_fast_eligible">False</field>
+        <field name="description">Point of Sale categories with icons and sequence hierarchy</field>
+    </record>
+
+    <!-- 5. Products (Lightning) -->
+    <record id="type_product_template" model="niits.migrate.type">
+        <field name="name">05. Products (Catalog &amp; Variants) ⚡</field>
+        <field name="code">product_template</field>
+        <field name="sequence">5</field>
+        <field name="category">master</field>
+        <field name="model">product.template</field>
+        <field name="unique_key">default_code</field>
+        <field name="depends_on">uom_uom,product_category</field>
+        <field name="bridge_module">product</field>
+        <field name="is_fast_eligible">True</field>
+        <field name="description">High-volume product master import with standard price, sale price, barcode, and categories</field>
+    </record>
+
+    <!-- 6. Packagings (Lightning) -->
+    <record id="type_product_packaging" model="niits.migrate.type">
+        <field name="name">06. Product Packagings &amp; Barcodes ⚡</field>
+        <field name="code">product_packaging</field>
+        <field name="sequence">6</field>
+        <field name="category">master</field>
+        <field name="model">product.packaging</field>
+        <field name="unique_key">barcode</field>
+        <field name="depends_on">product_template</field>
+        <field name="bridge_module">product</field>
+        <field name="is_fast_eligible">True</field>
+        <field name="description">Package definitions (Boxes, Pallets, Cartons) with barcodes and quantities</field>
+    </record>
+
+    <!-- 7. Customers (Lightning) -->
+    <record id="type_customers" model="niits.migrate.type">
+        <field name="name">07. Customers (Partners) ⚡</field>
+        <field name="code">customers</field>
+        <field name="sequence">7</field>
+        <field name="category">master</field>
+        <field name="model">res.partner</field>
+        <field name="unique_key">ref</field>
+        <field name="bridge_module">core</field>
+        <field name="is_fast_eligible">True</field>
+        <field name="description">Customer master records (Companies &amp; Contacts) with customer_rank = 1</field>
+    </record>
+
+    <!-- 8. Vendors (Lightning) -->
+    <record id="type_vendors" model="niits.migrate.type">
+        <field name="name">08. Vendors &amp; Suppliers ⚡</field>
+        <field name="code">vendors</field>
+        <field name="sequence">8</field>
+        <field name="category">master</field>
+        <field name="model">res.partner</field>
+        <field name="unique_key">ref</field>
+        <field name="bridge_module">core</field>
+        <field name="is_fast_eligible">True</field>
+        <field name="description">Supplier/Vendor records with supplier_rank = 1 and payment terms</field>
+    </record>
+
+    <!-- 9. Lots / Serial Numbers (Lightning) -->
+    <record id="type_stock_lot" model="niits.migrate.type">
+        <field name="name">09. Lots &amp; Serial Numbers ⚡</field>
+        <field name="code">stock_lot</field>
+        <field name="sequence">9</field>
+        <field name="category">inventory</field>
+        <field name="model">stock.lot</field>
+        <field name="unique_key">name</field>
+        <field name="depends_on">product_template</field>
+        <field name="bridge_module">stock</field>
+        <field name="is_fast_eligible">True</field>
+        <field name="description">Inventory tracking lots and individual serial numbers</field>
+    </record>
+
+    <!-- 10. Opening Stock -->
+    <record id="type_stock_quant" model="niits.migrate.type">
+        <field name="name">10. Opening Stock (Inventory Adjustment)</field>
+        <field name="code">stock_quant</field>
+        <field name="sequence">10</field>
+        <field name="category">inventory</field>
+        <field name="model">stock.quant</field>
+        <field name="unique_key">product_id</field>
+        <field name="depends_on">product_template,stock_lot</field>
+        <field name="bridge_module">stock</field>
+        <field name="is_fast_eligible">False</field>
+        <field name="description">Initial stock on hand quantities per location and lot with unit costs</field>
+    </record>
+
+    <!-- 11. Full Products + Lots + Stock + Expiry -->
+    <record id="type_stock_composite" model="niits.migrate.type">
+        <field name="name">11. Full Products + Lots + Stock + Expiry</field>
+        <field name="code">stock_composite</field>
+        <field name="sequence">11</field>
+        <field name="category">inventory</field>
+        <field name="model">product.template</field>
+        <field name="unique_key">default_code</field>
+        <field name="bridge_module">stock</field>
+        <field name="is_composite">True</field>
+        <field name="description">Composite bundle template for all-in-one catalog, initial lots, and opening stock</field>
+    </record>
+
+    <!-- 12. Chart of Accounts -->
+    <record id="type_account_account" model="niits.migrate.type">
+        <field name="name">12. Chart of Accounts (COA)</field>
+        <field name="code">account_account</field>
+        <field name="sequence">12</field>
+        <field name="category">accounting</field>
+        <field name="model">account.account</field>
+        <field name="unique_key">code</field>
+        <field name="bridge_module">account</field>
+        <field name="is_fast_eligible">False</field>
+        <field name="description">General Ledger accounts, types, and reconciliation flags</field>
+    </record>
+
+    <!-- 13. Journals -->
+    <record id="type_account_journal" model="niits.migrate.type">
+        <field name="name">13. Accounting Journals</field>
+        <field name="code">account_journal</field>
+        <field name="sequence">13</field>
+        <field name="category">accounting</field>
+        <field name="model">account.journal</field>
+        <field name="unique_key">code</field>
+        <field name="depends_on">account_account</field>
+        <field name="bridge_module">account</field>
+        <field name="is_fast_eligible">False</field>
+        <field name="description">Bank, Cash, Sale, Purchase, and Miscellaneous journals</field>
+    </record>
+
+    <!-- 14. Taxes -->
+    <record id="type_account_tax" model="niits.migrate.type">
+        <field name="name">14. Taxes &amp; Fiscal Positions</field>
+        <field name="code">account_tax</field>
+        <field name="sequence">14</field>
+        <field name="category">accounting</field>
+        <field name="model">account.tax</field>
+        <field name="unique_key">name</field>
+        <field name="depends_on">account_account</field>
+        <field name="bridge_module">account</field>
+        <field name="is_fast_eligible">False</field>
+        <field name="description">Sales and Purchase VAT/Tax rules and distribution accounts</field>
+    </record>
+
+    <!-- 15. Customer Opening Balances -->
+    <record id="type_customer_opening_balance" model="niits.migrate.type">
+        <field name="name">15. Customer Opening Balances (AR)</field>
+        <field name="code">customer_opening_balance</field>
+        <field name="sequence">15</field>
+        <field name="category">accounting</field>
+        <field name="model">account.move</field>
+        <field name="unique_key">ref</field>
+        <field name="depends_on">customers,account_account</field>
+        <field name="bridge_module">account</field>
+        <field name="is_fast_eligible">False</field>
+        <field name="description">Accounts Receivable opening invoices and debit balances</field>
+    </record>
+
+    <!-- 16. Vendor Opening Balances -->
+    <record id="type_vendor_opening_balance" model="niits.migrate.type">
+        <field name="name">16. Vendor Opening Balances (AP)</field>
+        <field name="code">vendor_opening_balance</field>
+        <field name="sequence">16</field>
+        <field name="category">accounting</field>
+        <field name="model">account.move</field>
+        <field name="unique_key">ref</field>
+        <field name="depends_on">vendors,account_account</field>
+        <field name="bridge_module">account</field>
+        <field name="is_fast_eligible">False</field>
+        <field name="description">Accounts Payable opening vendor bills and credit balances</field>
+    </record>
+
+    <!-- 17. Journal Entries / Opening GL -->
+    <record id="type_journal_entries" model="niits.migrate.type">
+        <field name="name">17. Journal Entries / Opening Trial Balance</field>
+        <field name="code">journal_entries</field>
+        <field name="sequence">17</field>
+        <field name="category">accounting</field>
+        <field name="model">account.move</field>
+        <field name="unique_key">ref</field>
+        <field name="depends_on">account_account,account_journal</field>
+        <field name="bridge_module">account</field>
+        <field name="is_fast_eligible">False</field>
+        <field name="description">General Ledger opening balances with balanced Debit = Credit</field>
+    </record>
+
+    <!-- 18. Full Sale Orders -->
+    <record id="type_sale_order" model="niits.migrate.type">
+        <field name="name">18. Full Sale Orders (Header + Lines)</field>
+        <field name="code">sale_order</field>
+        <field name="sequence">18</field>
+        <field name="category">transaction</field>
+        <field name="model">sale.order</field>
+        <field name="unique_key">name</field>
+        <field name="depends_on">customers,product_template</field>
+        <field name="bridge_module">sale</field>
+        <field name="is_fast_eligible">False</field>
+        <field name="description">Open quotations and confirmed sale orders with order lines</field>
+    </record>
+
+    <!-- 19. Full Purchase Orders -->
+    <record id="type_purchase_order" model="niits.migrate.type">
+        <field name="name">19. Full Purchase Orders (Header + Lines)</field>
+        <field name="code">purchase_order</field>
+        <field name="sequence">19</field>
+        <field name="category">transaction</field>
+        <field name="model">purchase.order</field>
+        <field name="unique_key">name</field>
+        <field name="depends_on">vendors,product_template</field>
+        <field name="bridge_module">purchase</field>
+        <field name="is_fast_eligible">False</field>
+        <field name="description">Purchase Requests for Quotation (RFQ) and Confirmed Purchase Orders</field>
+    </record>
+
+    <!-- Generic Model Mode -->
+    <record id="type_generic_model" model="niits.migrate.type">
+        <field name="name">99. Generic Custom Model Mode</field>
+        <field name="code">generic</field>
+        <field name="sequence">99</field>
+        <field name="category">generic</field>
+        <field name="model">res.partner</field>
+        <field name="unique_key">name</field>
+        <field name="bridge_module">core</field>
+        <field name="description">Import into any installed Odoo model using technical metadata mapping</field>
+    </record>
+</odoo>

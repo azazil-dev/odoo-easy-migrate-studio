@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Sample Pack 07: Customers -->
+    <record id="sample_07_customers" model="niits.migrate.sample">
+        <field name="name">07. Sample Customers Master</field>
+        <field name="sequence">7</field>
+        <field name="type_id" ref="type_customers"/>
+        <field name="file_name">07_customers.csv</field>
+        <field name="file_data" type="base64" file="niits_easy_migrate/data/samples/07_customers.csv"/>
+        <field name="description">Standard customer sample file with reference, name, email, phone, street, city</field>
+    </record>
+
+    <!-- Sample Pack 08: Vendors -->
+    <record id="sample_08_vendors" model="niits.migrate.sample">
+        <field name="name">08. Sample Vendors Master</field>
+        <field name="sequence">8</field>
+        <field name="type_id" ref="type_vendors"/>
+        <field name="file_name">08_vendors.csv</field>
+        <field name="file_data" type="base64" file="niits_easy_migrate/data/samples/08_vendors.csv"/>
+        <field name="description">Standard vendor/supplier sample file with reference, name, email, phone, street, city</field>
+    </record>
+</odoo>

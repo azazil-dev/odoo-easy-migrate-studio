@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_niits_migrate_studio_wizard_form" model="ir.ui.view">
+        <field name="name">niits.migrate.studio.wizard.form</field>
+        <field name="model">niits.migrate.studio.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Data Migration Studio" class="o_niits_studio_form">
+                <field name="step" invisible="1"/>
+                <field name="is_generic" invisible="1"/>
+
+                <sheet>
+                    <div class="o_niits_studio_container">
+
+                        <!-- Integrated Stepper Bar (Full width, centered) -->
+                        <div class="o_niits_control_bar p-3 mb-4 d-flex justify-content-center align-items-center">
+                            <!-- Stepper Progress Indicators -->
+                            <div class="o_niits_stepper_wrap">
+                                <div class="o_niits_step_item" decoration-info="step == 'step1'">
+                                    <span class="o_niits_step_num">1</span>
+                                    <span>Source &amp; File</span>
+                                </div>
+                                <i class="fa fa-chevron-right text-muted small"></i>
+                                <div class="o_niits_step_item" decoration-info="step == 'step2'">
+                                    <span class="o_niits_step_num">2</span>
+                                    <span>Columns Mapping</span>
+                                </div>
+                                <i class="fa fa-chevron-right text-muted small"></i>
+                                <div class="o_niits_step_item" decoration-info="step == 'step3'">
+                                    <span class="o_niits_step_num">3</span>
+                                    <span>Engine &amp; Options</span>
+                                </div>
+                                <i class="fa fa-chevron-right text-muted small"></i>
+                                <div class="o_niits_step_item" decoration-info="step == 'step4'">
+                                    <span class="o_niits_step_num">4</span>
+                                    <span>Review &amp; Run</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================= STEP 1: SOURCE ================= -->
+                        <div invisible="step != 'step1'">
+                            <div class="o_niits_alert p-3 mb-4 d-flex align-items-center gap-3">
+                                <i class="fa fa-info-circle fa-2x" style="color: #306cba;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1" style="color: #306cba;">Step 1: Choose Data Type &amp; Upload Source File</h6>
+                                    <p class="mb-0 small text-muted">Select an ordered migration type or choose any generic Odoo model. Download standard CSV templates to ensure clean columns.</p>
+                                </div>
+                            </div>
+
+                            <div class="row g-4">
+                                <div class="col-lg-6">
+                                    <div class="o_niits_card h-100">
+                                        <h5 class="fw-bold mb-3" style="color: #306cba;">
+                                            <i class="fa fa-database me-2" style="color: #4897f7;"></i>Target Configuration
+                                        </h5>
+                                        <group>
+                                            <field name="type_id" widget="selection" options="{'no_create': True}"/>
+                                            <field name="custom_model_id" invisible="not is_generic" required="is_generic" options="{'no_create': True}"/>
+                                        </group>
+                                        <div class="mt-4 pt-3 border-top">
+                                            <p class="text-muted small mb-2"><i class="fa fa-file-excel me-1 text-success"></i>Need the official template?</p>
+                                            <button name="action_download_template" string="Download Official CSV Template" type="object" class="btn btn-outline-primary w-100" icon="fa-download"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="o_niits_card o_niits_card_accent h-100">
+                                        <h5 class="fw-bold mb-3" style="color: #306cba;">
+                                            <i class="fa fa-file-arrow-up me-2" style="color: #4897f7;"></i>Upload Dataset File
+                                        </h5>
+                                        <p class="text-muted small mb-3">Supports CSV (UTF-8, Windows-1252) and Excel spreadsheets (XLSX, XLS). Files up to 500 MB are streamed smoothly.</p>
+                                        <group>
+                                            <field name="filename" invisible="1"/>
+                                            <field name="file_data" filename="filename" widget="binary" string="Choose File"/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================= STEP 2: COLUMNS ================= -->
+                        <div invisible="step != 'step2'">
+                            <div class="o_niits_alert p-3 mb-4 d-flex align-items-center gap-3">
+                                <i class="fa fa-table fa-2x" style="color: #306cba;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1" style="color: #306cba;">Step 2: Smart Column Auto-Mapping &amp; Verification</h6>
+                                    <p class="mb-0 small text-muted">Headers have been auto-matched against technical fields and labels using fuzzy detection. Adjust lookup keys or inline transformations as needed.</p>
+                                </div>
+                            </div>
+
+                            <div class="o_niits_card mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="fw-bold mb-0" style="color: #306cba;">
+                                        <i class="fa fa-columns me-2" style="color: #4897f7;"></i>Column Mappings
+                                    </h5>
+                                    <span class="badge bg-light text-primary border px-3 py-2">
+                                        <i class="fa fa-check me-1"></i>Auto-Matched
+                                    </span>
+                                </div>
+                                <field name="mapping_line_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="source_column"/>
+                                        <field name="field_id" options="{'no_create': True}"/>
+                                        <field name="field_type"/>
+                                        <field name="search_key" invisible="field_type != 'many2one'"/>
+                                        <field name="transform"/>
+                                        <field name="default_value"/>
+                                    </tree>
+                                </field>
+                            </div>
+
+                            <div class="row g-4 mb-4">
+                                <div class="col-lg-12">
+                                    <div class="o_niits_card">
+                                        <h5 class="fw-bold mb-3" style="color: #306cba;">
+                                            <i class="fa fa-save me-2" style="color: #4897f7;"></i>Save Preset for Future Imports
+                                        </h5>
+                                        <group>
+                                            <group>
+                                                <field name="save_as_preset"/>
+                                            </group>
+                                            <group>
+                                                <field name="preset_name" invisible="not save_as_preset" placeholder="e.g. Vendors Master 2026"/>
+                                            </group>
+                                        </group>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="o_niits_card">
+                                <h5 class="fw-bold mb-3" style="color: #306cba;">
+                                    <i class="fa fa-eye me-2" style="color: #4897f7;"></i>First 20 Rows Preview
+                                </h5>
+                                <field name="preview_html" nolabel="1"/>
+                            </div>
+                        </div>
+
+                        <!-- ================= STEP 3: OPTIONS ================= -->
+                        <div invisible="step != 'step3'">
+                            <div class="o_niits_alert p-3 mb-4 d-flex align-items-center gap-3">
+                                <i class="fa fa-cogs fa-2x" style="color: #306cba;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1" style="color: #306cba;">Step 3: Engine Execution &amp; Error Policies</h6>
+                                    <p class="mb-0 small text-muted">Tune migration speed presets, concurrency, transactional batch sizing, and how the engine behaves when encountering bad rows.</p>
+                                </div>
+                            </div>
+
+                            <div class="row g-4">
+                                <div class="col-lg-6">
+                                    <div class="o_niits_card h-100">
+                                        <h5 class="fw-bold mb-3" style="color: #306cba;">
+                                            <i class="fa fa-random me-2" style="color: #4897f7;"></i>Import Mode &amp; Scope
+                                        </h5>
+                                        <group>
+                                            <field name="mode" widget="radio"/>
+                                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                        </group>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="o_niits_card o_niits_card_accent h-100">
+                                        <h5 class="fw-bold mb-3" style="color: #306cba;">
+                                            <i class="fa fa-dashboard me-2" style="color: #4897f7;"></i>Engine Speed &amp; Tuning
+                                        </h5>
+                                        <group>
+                                            <field name="engine_speed" widget="radio"/>
+                                            <field name="batch_size"/>
+                                            <field name="workers"/>
+                                            <field name="error_policy" widget="radio"/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ================= STEP 4: REVIEW & RUN ================= -->
+                        <div invisible="step != 'step4'">
+                            <div class="alert alert-success p-3 mb-4 d-flex align-items-center gap-3 shadow-sm border-0 rounded-3">
+                                <i class="fa fa-check-circle fa-2x text-success"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1 text-success">Validation Complete: Ready for Launch!</h6>
+                                    <p class="mb-0 small text-muted">Pre-commit dry-run simulation finished. All verified rows are batched into transactional units.</p>
+                                </div>
+                            </div>
+
+                            <div class="o_niits_card">
+                                <h5 class="fw-bold mb-3" style="color: #306cba;">
+                                    <i class="fa fa-file-text me-2" style="color: #4897f7;"></i>Prepared Migration Job Session
+                                </h5>
+                                <group>
+                                    <field name="job_id" readonly="1"/>
+                                </group>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Navigation Footer -->
+                        <div class="o_niits_nav_footer mt-4 p-3 d-flex justify-content-between align-items-center">
+                            <div style="min-width: 160px;">
+                                <button name="action_step2_back" string="Back to Step 1" type="object" class="btn btn-secondary me-2" icon="fa-arrow-left" invisible="step != 'step2'"/>
+                                <button name="action_step3_back" string="Back to Step 2" type="object" class="btn btn-secondary me-2" icon="fa-arrow-left" invisible="step != 'step3'"/>
+                                <button name="action_step4_back" string="Back to Step 3" type="object" class="btn btn-secondary me-2" icon="fa-arrow-left" invisible="step != 'step4'"/>
+                            </div>
+                            <div class="d-flex justify-content-center flex-grow-1">
+                                <button name="action_step1_next" string="Next: Map Columns" type="object" class="btn btn-primary px-4 py-2 fw-semibold" icon="fa-arrow-right" invisible="step != 'step1'"/>
+                                <button name="action_step2_next" string="Next: Engine Options" type="object" class="btn btn-primary px-4 py-2 fw-semibold" icon="fa-arrow-right" invisible="step != 'step2'"/>
+                                <button name="action_step3_next" string="Validate &amp; Prepare Job" type="object" class="btn btn-primary px-4 py-2 fw-semibold" icon="fa-check" invisible="step != 'step3'"/>
+                                <button name="action_run_job" string="Launch Migration Job" type="object" class="btn btn-success px-4 py-2 fw-bold" icon="fa-rocket" invisible="step != 'step4'"/>
+                            </div>
+                            <div style="min-width: 160px;">
+                                <!-- Spacer to ensure perfect center alignment -->
+                            </div>
+                        </div>
+
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_niits_migrate_studio_wizard" model="ir.actions.act_window">
+        <field name="name">Migration Studio</field>
+        <field name="res_model">niits.migrate.studio.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

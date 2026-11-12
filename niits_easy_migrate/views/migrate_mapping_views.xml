@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_niits_migrate_mapping_tree" model="ir.ui.view">
+        <field name="name">niits.migrate.mapping.tree</field>
+        <field name="model">niits.migrate.mapping</field>
+        <field name="arch" type="xml">
+            <tree string="Mapping Presets">
+                <field name="name"/>
+                <field name="type_id"/>
+                <field name="model_id"/>
+                <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_niits_migrate_mapping_form" model="ir.ui.view">
+        <field name="name">niits.migrate.mapping.form</field>
+        <field name="model">niits.migrate.mapping</field>
+        <field name="arch" type="xml">
+            <form string="Mapping Preset">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g. Products Master 2026"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="type_id"/>
+                            <field name="model_id"/>
+                            <field name="model_name" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Column Mappings">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="source_column"/>
+                                    <field name="field_id" domain="[('model', '=', parent.model_name)]"/>
+                                    <field name="field_type"/>
+                                    <field name="search_key" invisible="field_type != 'many2one'"/>
+                                    <field name="transform"/>
+                                    <field name="default_value"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_niits_migrate_mapping" model="ir.actions.act_window">
+        <field name="name">Mapping Presets</field>
+        <field name="res_model">niits.migrate.mapping</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Save and reuse column mapping presets for your CSV/XLSX imports.
+            </p>
+        </field>
+    </record>
+</odoo>
