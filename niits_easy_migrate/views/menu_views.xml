@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top Level Menu -->
+    <menuitem id="menu_niits_migrate_root"
+              name="Easy Data Migration"
+              sequence="85"
+              web_icon="niits_easy_migrate,static/description/icon.png"
+              groups="group_migrate_user"/>
+
+    <!-- Studio Wizard -->
+    <menuitem id="menu_niits_migrate_studio"
+              name="Import Studio"
+              parent="menu_niits_migrate_root"
+              action="action_niits_migrate_studio_wizard"
+              sequence="10"/>
+
+    <!-- Job Sessions History -->
+    <menuitem id="menu_niits_migrate_job"
+              name="Import History"
+              parent="menu_niits_migrate_root"
+              action="action_niits_migrate_job"
+              sequence="20"/>
+
+    <!-- Presets -->
+    <menuitem id="menu_niits_migrate_mapping"
+              name="Mapping Presets"
+              parent="menu_niits_migrate_root"
+              action="action_niits_migrate_mapping"
+              sequence="30"/>
+
+    <!-- Sample Pack -->
+    <menuitem id="menu_niits_migrate_sample"
+              name="Sample Pack"
+              parent="menu_niits_migrate_root"
+              action="action_niits_migrate_sample"
+              sequence="40"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_niits_migrate_config"
+              name="Configuration"
+              parent="menu_niits_migrate_root"
+              sequence="90"
+              groups="group_migrate_manager"/>
+
+    <menuitem id="menu_niits_migrate_type"
+              name="Data Types"
+              parent="menu_niits_migrate_config"
+              action="action_niits_migrate_type"
+              sequence="10"/>
+</odoo>

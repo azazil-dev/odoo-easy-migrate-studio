@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_niits_migrate_type_tree" model="ir.ui.view">
+        <field name="name">niits.migrate.type.list</field>
+        <field name="model">niits.migrate.type</field>
+        <field name="arch" type="xml">
+            <list string="Data Types" decoration-muted="not is_installed">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category"/>
+                <field name="model"/>
+                <field name="unique_key"/>
+                <field name="bridge_module"/>
+                <field name="is_fast_eligible" widget="boolean_toggle"/>
+                <field name="is_installed" widget="badge" decoration-success="is_installed" decoration-danger="not is_installed"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_niits_migrate_type_form" model="ir.ui.view">
+        <field name="name">niits.migrate.type.form</field>
+        <field name="model">niits.migrate.type</field>
+        <field name="arch" type="xml">
+            <form string="Data Type Definition">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g. 05. Products"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="category"/>
+                            <field name="model"/>
+                            <field name="unique_key"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="bridge_module"/>
+                            <field name="depends_on"/>
+                            <field name="is_fast_eligible"/>
+                            <field name="is_composite"/>
+                            <field name="is_installed" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Template File">
+                            <group>
+                                <field name="template_filename" invisible="1"/>
+                                <field name="template_data" filename="template_filename"/>
+                            </group>
+                            <field name="description" placeholder="Instructions or notes for this data type..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_niits_migrate_type" model="ir.actions.act_window">
+        <field name="name">Data Types</field>
+        <field name="res_model">niits.migrate.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Manage supported data types and their prerequisites.
+            </p>
+        </field>
+    </record>
+</odoo>

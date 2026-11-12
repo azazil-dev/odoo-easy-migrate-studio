@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.module.category" id="module_category_niits_migration">
+        <field name="name">Data Migration</field>
+        <field name="description">Manage high-performance data import and migration</field>
+        <field name="sequence">25</field>
+    </record>
+
+    <record id="group_migrate_user" model="res.groups">
+        <field name="name">Migration User</field>
+        <field name="category_id" ref="module_category_niits_migration"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Allows running imports for standard predefined data types.</field>
+    </record>
+
+    <record id="group_migrate_manager" model="res.groups">
+        <field name="name">Migration Manager</field>
+        <field name="category_id" ref="module_category_niits_migration"/>
+        <field name="implied_ids" eval="[(4, ref('group_migrate_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="comment">Full access to Generic import mode, one-click undo, presets, and configuration.</field>
+    </record>
+</odoo>

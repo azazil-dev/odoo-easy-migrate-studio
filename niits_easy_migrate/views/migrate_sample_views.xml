@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_niits_migrate_sample_tree" model="ir.ui.view">
+        <field name="name">niits.migrate.sample.list</field>
+        <field name="model">niits.migrate.sample</field>
+        <field name="arch" type="xml">
+            <list string="Sample Pack Files">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="type_id"/>
+                <field name="file_name"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_niits_migrate_sample_form" model="ir.ui.view">
+        <field name="name">niits.migrate.sample.form</field>
+        <field name="model">niits.migrate.sample</field>
+        <field name="arch" type="xml">
+            <form string="Sample Pack File">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="type_id"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="file_name"/>
+                            <field name="file_data" filename="file_name"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Description of sample dataset..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_niits_migrate_sample" model="ir.actions.act_window">
+        <field name="name">Sample Pack</field>
+        <field name="res_model">niits.migrate.sample</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Download consistent numbered sample files (01 to 19) to test end-to-end data migration.
+            </p>
+        </field>
+    </record>
+</odoo>

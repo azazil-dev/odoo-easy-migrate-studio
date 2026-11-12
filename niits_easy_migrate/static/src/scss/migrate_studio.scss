@@ -1,0 +1,122 @@
+/* NIITS Easy Migrate Studio Styles */
+:root {
+    --niits-primary: #306cba;
+    --niits-accent: #4897f7;
+    --niits-gradient: linear-gradient(135deg, #1e3a8a 0%, #306cba 55%, #4897f7 100%);
+    --niits-bg-soft: #f4f8fe;
+    --niits-border-soft: #d8e6f8;
+}
+
+/* Make Form Sheet completely edge-to-edge / fullscreen without default outer margins */
+.o_form_view.o_niits_studio_form {
+    padding: 0 !important;
+}
+
+.o_form_view.o_niits_studio_form .o_form_sheet_bg {
+    padding: 0 !important;
+    background: #f1f5f9 !important;
+}
+
+.o_form_view.o_niits_studio_form .o_form_sheet {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+/* Container Full Edge-to-Edge */
+.o_niits_studio_container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 16px 20px 30px 20px !important;
+}
+
+/* Integrated Header Navigation Bar */
+.o_niits_control_bar {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Stepper Pills */
+.o_niits_stepper_wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.o_niits_step_item {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    color: #64748b;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.o_niits_step_item.active {
+    background: var(--niits-gradient);
+    color: #ffffff !important;
+    border-color: #306cba;
+    box-shadow: 0 2px 8px rgba(72, 151, 247, 0.35);
+}
+
+.o_niits_step_num {
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-right: 6px;
+    background: rgba(0, 0, 0, 0.07);
+}
+
+.o_niits_step_item.active .o_niits_step_num {
+    background: #ffffff;
+    color: #306cba;
+}
+
+/* Content Layout Cards */
+.o_niits_card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    border-top: 4px solid var(--niits-primary);
+}
+
+.o_niits_card_accent {
+    border-top-color: var(--niits-accent) !important;
+}
+
+/* Clean Alert Banner */
+.o_niits_alert {
+    background-color: var(--niits-bg-soft);
+    border: 1px solid var(--niits-border-soft);
+    border-left: 4px solid #306cba;
+    color: #1e3a8a;
+    border-radius: 10px;
+}
+
+/* Modern Bottom Navigation Bar */
+.o_niits_nav_footer {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_niits_migrate_job_tree" model="ir.ui.view">
+        <field name="name">niits.migrate.job.list</field>
+        <field name="model">niits.migrate.job</field>
+        <field name="arch" type="xml">
+            <list string="Import History" decoration-success="state == 'done'" decoration-danger="state == 'failed'" decoration-warning="state in ('running', 'validating')" decoration-muted="state == 'undone'">
+                <field name="name"/>
+                <field name="type_id"/>
+                <field name="source_filename"/>
+                <field name="mode"/>
+                <field name="engine_speed"/>
+                <field name="total_rows"/>
+                <field name="done_rows"/>
+                <field name="failed_rows"/>
+                <field name="progress_percentage" widget="progressbar"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-danger="state == 'failed'" decoration-warning="state in ('running', 'validating')"/>
+                <field name="user_id"/>
+                <field name="started_at"/>
+                <field name="duration_str"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_niits_migrate_job_form" model="ir.ui.view">
+        <field name="name">niits.migrate.job.form</field>
+        <field name="model">niits.migrate.job</field>
+        <field name="arch" type="xml">
+            <form string="Migration Job Session">
+                <header>
+                    <button name="action_validate_job" string="Validate" type="object" class="btn-secondary" invisible="state not in ('draft', 'failed')"/>
+                    <button name="action_start_job" string="Run Import" type="object" class="btn-primary" invisible="state not in ('draft', 'ready')"/>
+                    <button name="action_pause" string="Pause" type="object" class="btn-warning" invisible="state != 'running'"/>
+                    <button name="action_resume" string="Resume" type="object" class="btn-success" invisible="state != 'paused'"/>
+                    <button name="action_retry_failed" string="Retry Failed Batches" type="object" class="btn-warning" invisible="failed_rows == 0 or state not in ('done', 'failed')"/>
+                    <button name="action_undo" string="One-Click Undo" type="object" class="btn-danger" invisible="state != 'done'" confirm="Are you sure you want to revert all imported and updated records from this session?"/>
+                    <button name="action_view_records" string="Open Created Records" type="object" class="btn-info" invisible="state not in ('done', 'running')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,validating,ready,running,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Configuration">
+                            <field name="type_id" readonly="state != 'draft'"/>
+                            <field name="custom_model_name" invisible="not custom_model_name" readonly="state != 'draft'"/>
+                            <field name="source_filename" readonly="1"/>
+                            <field name="source_attachment_id" readonly="state != 'draft'"/>
+                            <field name="mapping_id" readonly="state != 'draft'"/>
+                            <field name="mode" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Engine &amp; Performance">
+                            <field name="engine_speed" readonly="state != 'draft'"/>
+                            <field name="batch_size" readonly="state != 'draft'"/>
+                            <field name="workers" readonly="state != 'draft'"/>
+                            <field name="error_policy" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                            <field name="user_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Progress &amp; Execution Metrics">
+                        <group>
+                            <field name="total_rows"/>
+                            <field name="done_rows"/>
+                            <field name="failed_rows"/>
+                            <field name="skipped_rows"/>
+                            <field name="progress_percentage" widget="progressbar"/>
+                        </group>
+                        <group>
+                            <field name="rows_per_second"/>
+                            <field name="started_at" readonly="1"/>
+                            <field name="finished_at" readonly="1"/>
+                            <field name="duration_str"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Batches">
+                            <field name="batch_ids" readonly="1">
+                                <list decoration-success="state == 'done'" decoration-danger="state == 'failed'" decoration-warning="state == 'running'">
+                                    <field name="sequence"/>
+                                    <field name="row_from"/>
+                                    <field name="row_to"/>
+                                    <field name="state" widget="badge" decoration-success="state == 'done'" decoration-danger="state == 'failed'"/>
+                                    <field name="worker_pid"/>
+                                    <field name="heartbeat"/>
+                                    <field name="error_log"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Validation &amp; Error Log" invisible="not error_ids">
+                            <field name="error_ids" readonly="1">
+                                <list decoration-danger="severity in ('error', 'critical')" decoration-warning="severity == 'warning'">
+                                    <field name="row_no"/>
+                                    <field name="column"/>
+                                    <field name="value"/>
+                                    <field name="message"/>
+                                    <field name="severity" widget="badge" decoration-danger="severity == 'error'" decoration-warning="severity == 'warning'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Undo History" invisible="not undo_log_ids">
+                            <field name="undo_log_ids" readonly="1">
+                                <list decoration-muted="is_reverted">
+                                    <field name="model"/>
+                                    <field name="res_id"/>
+                                    <field name="action"/>
+                                    <field name="is_reverted" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_niits_migrate_job_search" model="ir.ui.view">
+        <field name="name">niits.migrate.job.search</field>
+        <field name="model">niits.migrate.job</field>
+        <field name="arch" type="xml">
+            <search string="Search Migration Jobs">
+                <field name="name"/>
+                <field name="type_id"/>
+                <field name="user_id"/>
+                <field name="state"/>
+                <filter string="Running" name="filter_running" domain="[('state', '=', 'running')]"/>
+                <filter string="Completed" name="filter_done" domain="[('state', '=', 'done')]"/>
+                <filter string="Failed" name="filter_failed" domain="[('state', '=', 'failed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Data Type" name="groupby_type" context="{'group_by': 'type_id'}"/>
+                    <filter string="Status" name="groupby_state" context="{'group_by': 'state'}"/>
+                    <filter string="User" name="groupby_user" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_niits_migrate_job" model="ir.actions.act_window">
+        <field name="name">Import Sessions History</field>
+        <field name="res_model">niits.migrate.job</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_niits_migrate_job_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Track, pause, resume, and undo your data migration runs.
+            </p>
+        </field>
+    </record>
+</odoo>
